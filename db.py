@@ -1,6 +1,5 @@
 import sqlite3
 
-# From: https://goo.gl/YzypOI
 def singleton(cls):
     instances = {}
 
@@ -14,7 +13,7 @@ def singleton(cls):
 
 class DatabaseDriver(object):
     """
-    Database driver for the Task app.
+    Database driver for our app.
     Handles with reading and writing data with the database.
     """
 
