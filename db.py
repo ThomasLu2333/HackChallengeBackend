@@ -39,7 +39,7 @@ class DatabaseDriver(object):
                 """
                 CREATE TABLE IF NOT EXISTS location( 
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
+                    name TEXT NOT NULL
                 );
                 """
             )
@@ -62,7 +62,7 @@ class DatabaseDriver(object):
                     image TEXT NOT NULL, 
                     rating REAL NOT NULL, 
                     location_id INTEGER NOT NULL, 
-                    FOREIGN KEY(location_id) REFERENCES location(id) ON DELETE CASCADE,
+                    FOREIGN KEY(location_id) REFERENCES location(id) ON DELETE CASCADE
                 );
                 """
             )
@@ -85,7 +85,8 @@ class DatabaseDriver(object):
                     food INTEGER NOT NULL, 
                     description TEXT NOT NULL, 
                     restaurant_id INTEGER NOT NULL, 
-                    FOREIGN KEY(restaurant_id) REFERENCES restaurant(id) ON DELETE CASCADE,
+                    FOREIGN KEY(restaurant_id) REFERENCES restaurant(id) ON DELETE CASCADE
+                ); 
                 """
             )
         except Exception as e:
