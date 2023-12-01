@@ -6,10 +6,6 @@ DB = db.DatabaseDriver()
 
 app = Flask(__name__)
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
-
-
 def success(data, status_code):
     return json.dumps(data), status_code
 
@@ -33,7 +29,7 @@ def get_restaurant_from_location(location_id):
 def get_restaurant(restaurant_id):
     if DB.get_restaurant(restaurant_id) is None:
         return error("restaurant doesn't exist", 404)
-    return success({"restaurants": DB.get_restaurant(restaurant_id)}, 200)
+    return success(DB.get_restaurant(restaurant_id), 200)
 
 
 @app.route("/restaurants/", methods=["POST"])
@@ -60,3 +56,7 @@ def delete_review(restaurant_id):
         return error("restaurant does not exist", 404)
     DB.delete_review(restaurant_id)
     return success(rest, 200)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)
