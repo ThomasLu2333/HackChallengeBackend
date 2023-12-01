@@ -46,7 +46,17 @@ def create_restaurant():
     if name is None or description is None or location_id is None or address is None or rating is None:
         return error("missing fields in POST /restaurants/", 400)
     if (not isinstance(name, str) or not isinstance(description, str) or not isinstance(location_id, int)
-            or not isinstance(address, str) or not isinstance(rating, int) or DB.get_location(location_id) is None):
+            or not isinstance(address, str) or not isinstance(rating, int) or not (1 <= rating <= 5)
+            or DB.get_location(location_id) is None):
         return error("invalid fields in POST /restaurants/", 400)
     return success(DB.create_restaurant(name=name, description=description, location_id=location_id, address=address,
                                         image=image, rating=rating, cuisine=cuisine), 201)
+
+
+@app.route("/restaurants/<int:restaurant_id>/", methods=["DELETE"])
+def delete_review(restaurant_id):
+    rest = DB.get_restaurant(restaurant_id)
+    if rest is None:
+        return error("restaurant does not exist", 404)
+    DB.delete_review(restaurant_id)
+    return success(rest, 200)
