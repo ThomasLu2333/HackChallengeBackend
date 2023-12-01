@@ -47,7 +47,9 @@ class DatabaseDriver(object):
             self.conn.execute("INSERT INTO location (name) VALUES ('North Campus'); ")
             self.conn.execute("INSERT INTO location (name) VALUES ('West Campus');")
             self.conn.execute("INSERT INTO location (name) VALUES ('Central Campus'); ")
-            self.conn.execute(" INSERT INTO location (name) VALUES ('Central Campus'); ")
+            self.conn.execute(
+                " INSERT INTO location (name) VALUES ('Central Campus'); "
+            )
             self.conn.execute("INSERT INTO location (name) VALUES ('Downtown'); ")
             self.conn.execute("INSERT INTO location (name) VALUES ('Other'); ")
             self.conn.commit()
@@ -109,7 +111,8 @@ class DatabaseDriver(object):
             """
             SELECT * 
             FROM location; 
-        """)
+        """
+        )
         return [{"id": row[0], "name": row[1]} for row in cursor]
 
     def get_location(self, location_id):
@@ -122,7 +125,7 @@ class DatabaseDriver(object):
             FROM location
             WHERE id = ?; 
             """,
-            (location_id,)
+            (location_id,),
         ).fetchone()
         if row is None:
             return None
@@ -141,22 +144,35 @@ class DatabaseDriver(object):
             FROM restaurant
             WHERE id = ?; 
             """,
-            (restaurant_id,)
+            (restaurant_id,),
         ).fetchone()
         if row is None:
             return None
-        restaurant = {"id": row[0], "description": row[1], "cuisine": row[2], "address": row[3], "image": row[4],
-                      "rating": row[5], "location_id": row[6]}
+        restaurant = {
+            "id": row[0],
+            "description": row[1],
+            "cuisine": row[2],
+            "address": row[3],
+            "image": row[4],
+            "rating": row[5],
+            "location_id": row[6],
+        }
         cursor = self.conn.execute(
             """
             SELECT *
             FROM review
             WHERE restaurant_id=?;
             """,
-            (restaurant["id"],)
+            (restaurant["id"],),
         )
         restaurant["reviews"] = [
-            {"date_created": row[0], "service": row[1], "decor": row[2], "food": row[3], "description": row[4]}
+            {
+                "date_created": row[0],
+                "service": row[1],
+                "decor": row[2],
+                "food": row[3],
+                "description": row[4],
+            }
             for row in cursor
         ]
         return restaurant
@@ -173,7 +189,7 @@ class DatabaseDriver(object):
             SELECT id
             FROM restaurant
             WHERE location_id=?;""",
-            (location_id,)
+            (location_id,),
         )
         return [self.get_restaurant(row[0]) for row in cursor]
 
@@ -185,10 +201,24 @@ class DatabaseDriver(object):
             """
             INSERT INTO restaurant (description, cuisine, address, image, rating, location_id)
             VALUES (?, ?, ?, ?, 3, ?)""",
-            (description, cuisine, address, image, location_id)
+            (description, cuisine, address, image, location_id),
         )
         self.conn.commit()
         return self.get_restaurant(cursor.lastrowid)
+
+    def delete_review(self, restaurant_id):
+        """
+        Deletes a restaurant associated with id restaurant_id and returns the restaurant
+        """
+        self.conn.execute(
+            """
+            DELETE 
+            FROM restaurant
+            WHERE id=?;
+            """,
+            (restaurant_id,),
+        )
+        self.conn.commit()
 
 
 # Only <=1 instance of the database driver
