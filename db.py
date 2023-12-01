@@ -48,7 +48,7 @@ class DatabaseDriver(object):
             self.conn.execute("INSERT INTO location (name) VALUES ('West Campus');")
             self.conn.execute("INSERT INTO location (name) VALUES ('Central Campus'); ")
             self.conn.execute(
-                " INSERT INTO location (name) VALUES ('Central Campus'); "
+                " INSERT INTO location (name) VALUES ('Collegetown'); "
             )
             self.conn.execute("INSERT INTO location (name) VALUES ('Downtown'); ")
             self.conn.execute("INSERT INTO location (name) VALUES ('Other'); ")
