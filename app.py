@@ -39,13 +39,14 @@ def get_restaurant(restaurant_id):
 @app.route("/restaurants/", methods=["POST"])
 def create_restaurant():
     body = json.loads(request.data)
-    description, location_id, cuisine, address, image = (
-        body.get("description"), body.get("location_id"), body.get("cuisine"), body.get("address"),
-        body.get("image")
+    name, description, location_id, cuisine, address, image, rating = (
+        body.get("name"), body.get("description"), body.get("location_id"), body.get("cuisine"), body.get("address"),
+        body.get("image"), body.get("rating", 3)
     )
-    if description is None or location_id is None or cuisine is None or address is None or image is None:
+    if name is None or description is None or location_id is None or address is None or rating is None:
         return error("missing fields in POST /restaurants/", 400)
-    if (not isinstance(description, str) or not isinstance(location_id, int) or not isinstance(cuisine, str) or
-            not isinstance(address, str) or not isinstance(image, str) or DB.get_location(location_id) is None):
+    if (not isinstance(name, str) or not isinstance(description, str) or not isinstance(location_id, int)
+            or not isinstance(address, str) or not isinstance(rating, int) or DB.get_location(location_id) is None):
         return error("invalid fields in POST /restaurants/", 400)
-    return success(DB.create_restaurant(description,location_id,cuisine,address,image), 201)
+    return success(DB.create_restaurant(name=name, description=description, location_id=location_id, address=address,
+                                        image=image, rating=rating, cuisine=cuisine), 201)

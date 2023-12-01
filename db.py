@@ -64,10 +64,11 @@ class DatabaseDriver(object):
                 """
                 CREATE TABLE IF NOT EXISTS restaurant( 
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL, 
                     description TEXT NOT NULL, 
-                    cuisine TEXT NOT NULL, 
+                    cuisine TEXT, 
                     address TEXT NOT NULL, 
-                    image TEXT NOT NULL, 
+                    image TEXT, 
                     rating REAL NOT NULL, 
                     location_id INTEGER NOT NULL, 
                     FOREIGN KEY(location_id) REFERENCES location(id) ON DELETE CASCADE
@@ -145,8 +146,8 @@ class DatabaseDriver(object):
         ).fetchone()
         if row is None:
             return None
-        restaurant = {"id": row[0], "description": row[1], "cuisine": row[2], "address": row[3], "image": row[4],
-                      "rating": row[5], "location_id": row[6]}
+        restaurant = {"id": row[0], "name":row[1], "description": row[2], "cuisine": row[3], "address": row[4], "image": row[5],
+                      "rating": row[6], "location_id": row[7]}
         cursor = self.conn.execute(
             """
             SELECT *
@@ -177,18 +178,20 @@ class DatabaseDriver(object):
         )
         return [self.get_restaurant(row[0]) for row in cursor]
 
-    def create_restaurant(self, description, location_id, cuisine, address, image):
+    def create_restaurant(self, name, description, location_id, address, cuisine, image, rating):
         """
-        Creates a new restaurant in the restaurant table with default rating 3.0.
+        Creates a new restaurant in the restaurant table.
         """
         cursor = self.conn.execute(
             """
-            INSERT INTO restaurant (description, cuisine, address, image, rating, location_id)
-            VALUES (?, ?, ?, ?, 3, ?)""",
-            (description, cuisine, address, image, location_id)
+            INSERT INTO restaurant (name, description, cuisine, address, image, rating, location_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (name, description, cuisine, address, image, rating, location_id)
         )
         self.conn.commit()
         return self.get_restaurant(cursor.lastrowid)
+
+
 
 
 # Only <=1 instance of the database driver
